@@ -13,6 +13,8 @@ def before_request():
     """拦截请求，请求之前过滤掉未确认且请求端点不在认证蓝本中的用户请求，
 	重定向到一个显示给未确认用户的页面
 	"""
+    if current_user.is_authenticated:
+        current_user.ping()
     if current_user.is_authenticated \
             and not current_user.confirmed \
             and request.endpoint[:5] != 'auth.' \
@@ -31,8 +33,7 @@ def unconfirmed():
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    """登录路由
-	"""
+    """登录路由"""
     form = LoginForm()
     # 如果表单验证成功，查询表单中的email是否在数据库中
     if form.validate_on_submit():
@@ -51,8 +52,7 @@ def login():
 @auth.route('/logout')
 @login_required
 def logout():
-    """登出路由，回到首页
-	"""
+    """登出路由，回到首页"""
     logout_user()
     flash("You have been logged out.")
     return redirect(url_for('main.index'))
@@ -60,8 +60,7 @@ def logout():
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
-    """用户注册路由
-	"""
+    """用户注册路由"""
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(email=form.email.data,
@@ -80,8 +79,7 @@ def register():
 @auth.route('/confirm/<token>')
 @login_required
 def confirm(token):
-    """处理邮件确认路由
-	"""
+    """处理邮件确认路由"""
     if current_user.confirmed:
         return redirect(url_for('main.index'))
     if current_user.confirm(token):
@@ -94,8 +92,7 @@ def confirm(token):
 @auth.route('/confirm')
 @login_required
 def resend_confirmation():
-    """给已登录的未确认的用户重新发确认邮件
-	"""
+    """给已登录的未确认的用户重新发确认邮件"""
     token = current_user.generate_confirmation_token()
     send_email(current_user.email, 'Confirm Your Account',
                'auth/email/confirm', user=current_user, token=token)
