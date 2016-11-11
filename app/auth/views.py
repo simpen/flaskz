@@ -182,7 +182,7 @@ def change_email_request():
 @login_required
 def change_email(token):
     '''验证修改email令牌'''
-    if current_user.change_email_confirm(token):
+    if current_user.change_email(token):
         flash('Your email address has been changed.')
     else:
         flash('The confirmation link is invalid or has expired.')
