@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 from datetime import datetime
 import hashlib
 from . import db, login_manager

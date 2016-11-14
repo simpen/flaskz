@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 from flask_wtf import FlaskForm  # 新版本中把Form改名为FlaskFrom
 from wtforms import StringField, SubmitField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
